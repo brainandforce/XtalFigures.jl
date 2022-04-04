@@ -68,7 +68,7 @@ Base.abs(v::Spherical) = Spherical(abs(r(v)), theta(v), phi(v))
 """
     phi(v::Spherical{T}) -> T
 
-Gets the theta component of spherical coordinate.
+Gets the phi component of a spherical coordinate.
 """
 phi(v::Spherical) = v.ϕ
 
