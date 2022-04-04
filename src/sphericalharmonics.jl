@@ -92,3 +92,18 @@ function Y_real(s::SphericalComponents{Lmax}; grit::Integer = 32) where Lmax
     end
     return Spherical.(r, theta.(sph), phi.(sph))
 end
+
+"""
+    readCP(io::IO, lmax::Val{L}) -> SphericalComponents{L}
+    readCP(io::IO; lmax=6) -> SphericalComponents{6}
+
+Reads data from a CPpackage2 chemical pressure calculation. 
+"""
+function readCP(io::IO, lmax::Val{L}) where L
+    data = parse.(Float64, [split(s)[2] for s in readlines(io)])
+    ncomp = (L+1)^2
+    natom = div(length(data), ncomp)
+    return [SphericalComponents{L}(data[n*ncomp .+ (1:ncomp)]) for n in 1:natom]
+end
+
+readCP(io::IO; lmax=6) = readCP(io, Val(lmax))
