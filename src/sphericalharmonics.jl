@@ -38,7 +38,7 @@ Generates a set of points that can be used to plot a spherical harmonic.
 """
 function Y_real(l::Integer, m::Integer, r::Real = 1; grit::Integer=32)
     # Generate the sphere that has all the data points
-    a = sphere(r, grit = grit)
+    a = sphere(r; grit)
     # Calculate the spherical harmonic radial values throughout the sphere
     rho = Y_real.(l, m, a)
     # Convert to spherical coordinates
@@ -55,10 +55,12 @@ end
 Real spherical harmonic components up to `Lmax`.
 """ SphericalComponents
 
+SphericalComponents{Lmax}(v::AbstractVector) where Lmax = SphericalComponents{Lmax}(Tuple(v))
+
 """
     sc_ind(l::Integer, m::Integer) -> Int
 
-Gets the associated linear index for 
+Gets the associated linear index for a pair of (l,m) values used in `SphericalComponents`.
 """
 sc_ind(l::Integer, m::Integer) = l^2 + l + 1 + m
 
@@ -67,9 +69,8 @@ sc_ind(l::Integer, m::Integer) = l^2 + l + 1 + m
 
 function Base.getindex(s::SphericalComponents{Lmax}, l::Integer, m::Integer) where Lmax
     abs(m) <= l || error("|m| must be less than l")
-    l <= lmax || error("l exceeds lmax ($Lmax)")
-    ind = l^2 + l + 1 + m
-    return s.v[ind]
+    l <= Lmax || error("l exceeds lmax ($Lmax)")
+    return s.v[sc_ind(l, m)]
 end
 
 """
@@ -79,13 +80,13 @@ Evaluates a linear combination of spherical harmonics on the surface of a sphere
 `sphere()`.
 """
 function Y_real(s::SphericalComponents{Lmax}; grit::Integer = 32) where Lmax
+    sph = sphere(;grit)
     # Preallocate the output matrix
-    sph = sphere(grit = grit)
     r = zeros(size(sph))
     for l in 0:Lmax
         for m in -l:l
             r += s[l,m] * Y_real.(l, m, sph)
         end
     end
-    return Spherical.(r, theta(sph), phi(sph))
+    return Spherical.(r, theta.(sph), phi.(sph))
 end

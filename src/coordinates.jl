@@ -58,13 +58,12 @@ struct Spherical{T<:Real} <: AbstractPolar
     θ::T    # in radians, 0 ≤ θ < π/2
     ϕ::T    # in radians, 0 ≤ θ < 2π
     function Spherical(r::Real, θ::Real, ϕ::Real)
-        (r, t, p) = promote(r, θ % π/2, ϕ % 2π)
+        (r, t, p) = promote(r, θ % π, ϕ % 2π)
         return new{typeof(r)}(r, t, p)
     end
 end
 
-# If only angles are given, assume r is 1
-Spherical(θ, ϕ) = Spherical(1, θ, ϕ)
+Base.abs(v::Spherical) = Spherical(abs(r(v)), theta(v), phi(v))
 
 """
     phi(v::Spherical{T}) -> T
@@ -81,6 +80,9 @@ function Spherical(v::AbstractVector{T}) where T<:Real
     return Spherical(r, theta, phi)
 end
 
+# If only angles are given, assume r is 1
+Spherical(θ, ϕ) = Spherical(1, θ, ϕ)
+
 """
     cart2sph(v::SVector{3,T}) -> Spherical{T}
 
@@ -90,9 +92,9 @@ cart2sph(v::AbstractVector) = Spherical(v)
 convert(::Type{Spherical}, v::SVector{3,T}) where T<:Real = Spherical(v)
 
 function StaticArrays.SVector(v::Spherical{T}) where T
-    x = v.r * cos(v.ϕ) * sin(v.θ)
-    y = v.r * sin(v.ϕ) * sin(v.θ)
-    z = v.r * cos(v.θ)
+    x = r(v) * cos(phi(v)) * sin(theta(v))
+    y = r(v) * sin(phi(v)) * sin(theta(v))
+    z = r(v) * cos(theta(v))
     return SVector{3,T}(x, y, z)
 end
 
