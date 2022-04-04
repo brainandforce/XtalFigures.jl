@@ -6,6 +6,8 @@ using Printf
 using ComputedFieldTypes
 # Documentation can be found at https://plotly.com/julia/
 using PlotlyJS
+# TODO: ensure that this works correctly; Xtal isn't in the registry yet
+using Xtal
 
 # Coordinate system types
 include("coordinates.jl")

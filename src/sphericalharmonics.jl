@@ -45,6 +45,8 @@ function Y_real(l::Integer, m::Integer, r::Real = 1; grit::Integer=32)
     return Spherical.(rho, theta.(a), phi.(a))
 end
 
+# Note: @computed structs cannot be documented normally
+# Use an @doc after the struct, like such
 @computed struct SphericalComponents{Lmax}
     v::NTuple{(Lmax+1)^2,Float64}
 end
