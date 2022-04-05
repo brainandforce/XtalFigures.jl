@@ -59,6 +59,21 @@ Real spherical harmonic components up to `Lmax`.
 
 SphericalComponents{Lmax}(v::AbstractVector) where Lmax = SphericalComponents{Lmax}(Tuple(v))
 
+function SphericalComponents{Lmax}(x::Real...) where Lmax
+    # This lets it throw a more informative exception
+    len = length(x)
+    if len == (Lmax+1)^2
+        SphericalComponents{Lmax}(x)
+    else
+        msg = string(
+            "For Lmax = ", Lmax, ", ", (Lmax+1)^2,
+            " components are needed, but ",
+            len, " were provided."
+        )
+        throw(ArgumentError(msg))
+    end
+end
+
 """
     sc_ind(l::Integer, m::Integer) -> Int
 

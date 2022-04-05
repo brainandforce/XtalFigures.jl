@@ -22,3 +22,8 @@ function Base.show(io::IO, ::MIME"text/plain", s::SphericalComponents{Lmax}) whe
         end
     end
 end
+
+function Base.show(io::IO, s::SphericalComponents{Lmax}) where Lmax
+    component_string = join(string.(s.v), ", ")
+    print(io, "SphericalComponents{$Lmax}(", component_string, ")")
+end
