@@ -45,51 +45,6 @@ function Y_real(l::Integer, m::Integer, r::Real = 1; grit::Integer=32)
     return Spherical.(rho, theta.(a), phi.(a))
 end
 
-# Note: @computed structs cannot be documented normally
-# Use an @doc after the struct, like such
-@computed struct SphericalComponents{Lmax}
-    v::NTuple{(Lmax+1)^2,Float64}
-end
-
-@doc """
-    SphericalComponents{Lmax}
-
-Real spherical harmonic components up to `Lmax`.
-""" SphericalComponents
-
-SphericalComponents{Lmax}(v::AbstractVector) where Lmax = SphericalComponents{Lmax}(Tuple(v))
-
-function SphericalComponents{Lmax}(x::Real...) where Lmax
-    # This lets it throw a more informative exception
-    len = length(x)
-    if len == (Lmax+1)^2
-        SphericalComponents{Lmax}(x)
-    else
-        msg = string(
-            "For Lmax = ", Lmax, ", ", (Lmax+1)^2,
-            " components are needed, but ",
-            len, " were provided."
-        )
-        throw(ArgumentError(msg))
-    end
-end
-
-"""
-    sc_ind(l::Integer, m::Integer) -> Int
-
-Gets the associated linear index for a pair of (l,m) values used in `SphericalComponents`.
-"""
-sc_ind(l::Integer, m::Integer) = l^2 + l + 1 + m
-
-# TODO: finish the inverse of the above function
-# sc_ind(x) = 
-
-function Base.getindex(s::SphericalComponents{Lmax}, l::Integer, m::Integer) where Lmax
-    abs(m) <= l || error("|m| must be less than l")
-    l <= Lmax || error("l exceeds lmax ($Lmax)")
-    return s.v[sc_ind(l, m)]
-end
-
 """
     Y_real(s::SphericalComponents; grit::Integer = 32) = Matrix{Spherical{Float64}}
 
