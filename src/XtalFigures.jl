@@ -22,6 +22,8 @@ export SphericalComponents
 export Y_real
 # Tools for plotting with PlotlyJS
 include("plottable.jl")
+include("draw3d.jl")
+export Draw3D
 # Show methods for custom types
 include("show.jl")
 

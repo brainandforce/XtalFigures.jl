@@ -58,7 +58,7 @@ struct Spherical{T<:Real} <: AbstractPolar
     θ::T    # in radians, 0 ≤ θ < π/2
     ϕ::T    # in radians, 0 ≤ θ < 2π
     function Spherical(r::Real, θ::Real, ϕ::Real)
-        (r, t, p) = promote(r, θ % π, ϕ % 2π)
+        (r, t, p) = promote(r, θ % 2π, ϕ % 2π)
         return new{typeof(r)}(r, t, p)
     end
 end
