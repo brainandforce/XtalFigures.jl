@@ -5,7 +5,9 @@ Contains methods used for drawing objects in 3D plots.
 """
 module Draw3D
 
+using ..XtalFigures
 using Xtal
+using Colors
 import PlotlyJS
 
 """
@@ -74,9 +76,9 @@ function spherical_harmonic(
     grit::Integer = 32,
     gradient::Bool=false,
     kwargs...
-)
+) where Lmax
         # Convert back to Cartesian coordinates
-    sph = Y_real(s; grit)
+    sph = Y_real(components; grit)
     cart = sph2cart.(abs.(sph))
     # Get all 3D components
     (x,y,z) = ([v[n] for v in cart] .+ offset[n] for n in 1:3)
@@ -90,6 +92,6 @@ function spherical_harmonic(
     )
 end
 
-export unit_cell, spherical_harmonic
+# TODO: include method that doesn't need the SphericalComponents{Lmax} constructor to be called
 
 end
