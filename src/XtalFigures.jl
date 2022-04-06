@@ -4,10 +4,8 @@ using LinearAlgebra
 using StaticArrays
 using Printf
 using ComputedFieldTypes
-using Colors
 # Documentation can be found at https://plotly.com/julia/
 import PlotlyJS
-# TODO: ensure that this works correctly; Xtal isn't in the registry yet
 using Xtal
 
 # Coordinate system types
@@ -22,6 +20,7 @@ export SphericalComponents
 export Y_real
 # Tools for plotting with PlotlyJS
 include("draw2d.jl")
+export Draw2D
 include("draw3d.jl")
 export Draw3D
 # Show methods for custom types

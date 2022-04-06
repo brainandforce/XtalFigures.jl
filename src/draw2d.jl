@@ -1,5 +1,5 @@
 """
-    Draw3D
+    Draw2D
 
 Contains methods used for drawing objects in 3D plots.
 """
